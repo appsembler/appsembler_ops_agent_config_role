@@ -1,0 +1,14 @@
+galaxy_info:
+  author: Anders Pearson
+  description: Appsembler standard config for ops agent
+  company: Appsembler
+  license: BSD-3-Clause
+  min_ansible_version: 2.9
+  galaxy_tags: []
+
+dependencies: []
+  # - name: googlecloudplatform.google_cloud_ops_agents
+  #   version: 1.0.5
+  #   vars:
+  #     agent_type: ops-agent
+  

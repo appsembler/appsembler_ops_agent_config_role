@@ -1,0 +1,137 @@
+---
+logging:
+  receivers:
+    auditd:
+      type: files
+      include_paths:
+      - /var/log/audit/audit.log
+    edx_edxapp:
+      type: files
+      include_paths:
+      - /edx/var/log/lms/edx.log
+      - /edx/var/log/cms/edx.log
+    edx_supervisor:
+      type: files
+      include_paths:
+      - /edx/var/log/supervisor/*.log
+    edx_tracking:
+      type: files
+      include_paths:
+      - /edx/var/log/tracking/tracking.log
+    elasticsearch:
+      type: files
+      include_paths:
+      - /edx/var/log/elasticsearch/*.log
+    elasticsearch_json:
+      type: elasticsearch_json
+    elasticsearch_gc:
+      type: elasticsearch_gc
+    letsencrypt:
+      type: files
+      include_paths:
+      - /var/log/letsencrypt/letsencrypt.log
+    mongodb:
+      type: mongodb
+      include_paths:
+      - /var/log/mongodb/*.log
+      - /edx/var/log/mongodb/*.log
+    mysql_error:
+      type: mysql_error
+    mysql_general:
+      type: mysql_general
+    mysql_slow:
+      type: mysql_slow
+    nginx_access:
+      type: nginx_access
+      include_paths:
+      - /var/log/nginx/access*.log
+      - /edx/var/log/nginx/access*.log
+      exclude_paths:
+      - /var/log/nginx/access_metrics.log
+      - /edx/var/log/nginx/access_metrics.log
+    nginx_error:
+      type: nginx_error
+      include_paths:
+      - /var/log/nginx/error.log
+      - /edx/var/log/nginx/error.log
+    postgresql_general:
+      type: postgresql_general
+    rabbitmq:
+      type: files
+      include_paths:
+      - /edx/var/log/rabbitmq/*.log
+    redis:
+      type: redis
+    syslog:
+      type: files
+      include_paths:
+      - /var/log/messages
+      - /var/log/syslog
+      - /var/log/auth.log
+      - /var/log/kern.log
+      - /var/log/apt/history.log
+    uus:
+      type: files
+      include_paths:
+      - /var/log/unattended-upgrades/*.log
+  service:
+    pipelines:
+      auditd:
+        receivers: [auditd]
+      default_pipeline:
+        receivers: [syslog]
+      edx:
+        receivers:
+          - edx_edxapp
+          - edx_supervisor
+          - edx_tracking
+      elasticsearch:
+        receivers:
+          - elasticsearch
+          - elasticsearch_json
+          - elasticsearch_gc
+      letsencrypt:
+        receivers: [letsencrypt]
+      mongodb:
+        receivers:
+          - mongodb
+      mysql:
+        receivers:
+          - mysql_error
+          - mysql_general
+          - mysql_slow
+      nginx:
+        receivers: [nginx_access, nginx_error]
+      postgresql:
+        receivers: [postgresql_general]
+      rabbitmq:
+        receivers: [rabbitmq]
+      redis:
+        receivers: [redis]
+      uus:
+        receivers: [uus]
+metrics:
+  receivers:
+    hostmetrics:
+      type: hostmetrics
+      collection_interval: 60s
+    memcached:
+      type: memcached
+    nginx:
+      type: nginx
+      stub_status_url: http://127.0.0.1:80/status
+  processors:
+    metrics_filter:
+      type: exclude_metrics
+      metrics_pattern: []
+  service:
+    pipelines:
+      default_pipeline:
+        receivers: [hostmetrics]
+        processors: [metrics_filter]
+      memcached:
+        receivers:
+          - memcached
+      nginx:
+        receivers:
+          - nginx

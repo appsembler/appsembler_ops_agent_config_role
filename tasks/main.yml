@@ -1,0 +1,16 @@
+---
+
+- name: ensure ops agent configurations dir exists
+  file:
+    path: "/etc/google-cloud-ops-agent/"
+    state: directory
+
+- name: write out our custom ops agent config
+  ansible.builtin.template:
+    src: config.yaml.j2
+    dest: /etc/google-cloud-ops-agent/config.yaml
+  notify:
+    - restart ops agent
+
+- name: Flush handlers
+  meta: flush_handlers

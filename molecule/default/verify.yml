@@ -1,0 +1,14 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: check that config file exists
+    stat:
+      path: /etc/google-cloud-ops-agent/config.yaml
+    register: p
+  - assert:
+      that:
+        - p.stat.exists
