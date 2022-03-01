@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 ### Changed
+* fixed some compatability issues with Ubuntu 16.04 (xenial). Some log
+  types don't exist or have different names with the version that gets
+  installed there.
 ### Removed
 
 ## [v1.0.0] - 2022-02-23

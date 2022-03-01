@@ -22,16 +22,22 @@ logging:
       type: files
       include_paths:
       - /edx/var/log/elasticsearch/*.log
+{% if ansible_distribution_release != "xenial" %}
     elasticsearch_json:
       type: elasticsearch_json
     elasticsearch_gc:
       type: elasticsearch_gc
+{% endif %}
     letsencrypt:
       type: files
       include_paths:
       - /var/log/letsencrypt/letsencrypt.log
     mongodb:
+{% if ansible_distribution_release == "xenial" %}
+      type: files
+{% else %}
       type: mongodb
+{% endif %}
       include_paths:
       - /var/log/mongodb/*.log
       - /edx/var/log/mongodb/*.log
@@ -54,8 +60,16 @@ logging:
       include_paths:
       - /var/log/nginx/error.log
       - /edx/var/log/nginx/error.log
-    postgresql_general:
+    postgresql:
+{% if ansible_distribution_release == "xenial" %}
+      type: files
+{% else %}
       type: postgresql_general
+{% endif %}
+{% if ansible_distribution_release == "xenial" %}
+      include_paths:
+      - /var/log/postgresql/*.log
+{% endif %}
     rabbitmq:
       type: files
       include_paths:
@@ -88,8 +102,10 @@ logging:
       elasticsearch:
         receivers:
           - elasticsearch
+{% if ansible_distribution_release != "xenial" %}
           - elasticsearch_json
           - elasticsearch_gc
+{% endif %}
       letsencrypt:
         receivers: [letsencrypt]
       mongodb:
@@ -103,7 +119,7 @@ logging:
       nginx:
         receivers: [nginx_access, nginx_error]
       postgresql:
-        receivers: [postgresql_general]
+        receivers: [postgresql]
       rabbitmq:
         receivers: [rabbitmq]
       redis:
@@ -115,11 +131,14 @@ metrics:
     hostmetrics:
       type: hostmetrics
       collection_interval: 60s
+{% if ansible_distribution_release != "xenial" %}
     memcached:
       type: memcached
+{% endif %}
     nginx:
       type: nginx
       stub_status_url: http://127.0.0.1:80/status
+      collection_interval: 60s
   processors:
     metrics_filter:
       type: exclude_metrics
@@ -129,9 +148,11 @@ metrics:
       default_pipeline:
         receivers: [hostmetrics]
         processors: [metrics_filter]
+{% if ansible_distribution_release != "xenial" %}
       memcached:
         receivers:
           - memcached
+{% endif %}
       nginx:
         receivers:
           - nginx
