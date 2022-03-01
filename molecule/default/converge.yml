@@ -1,11 +1,22 @@
 ---
 - name: Converge
   hosts: all
+  gather_facts: true
   tasks:
     - name: Update APT
       apt:
         update_cache: yes
         cache_valid_time: 3600
+
+    - name: Install python libs
+      apt:
+        name: python3-setuptools
+        state: latest
+
+    - name: Install yamllint
+      apt:
+        name: yamllint
+        state: latest
     - name: "Include appsembler_ops_agent_config_role"
       include_role:
         name: "appsembler_ops_agent_config_role"

@@ -3,12 +3,48 @@
 
 - name: Verify
   hosts: all
-  gather_facts: false
+  gather_facts: true
   tasks:
   - name: check that config file exists
     stat:
       path: /etc/google-cloud-ops-agent/config.yaml
     register: p
+
   - assert:
       that:
         - p.stat.exists
+
+  - name: make sure that the config is valid yaml
+    shell: "yamllint -d '{extends: relaxed, rules: {indentation: disable}}' /etc/google-cloud-ops-agent/config.yaml"
+
+  - name: get contents of config file
+    shell: cat /etc/google-cloud-ops-agent/config.yaml
+    register: config_contents
+
+  # this is handy to uncomment if you are running into yamllint problems:
+  # - debug:
+  #     msg: "{{ config_contents.stdout.split('\n') }}"
+
+  - name: xenial doesn't have postgresql_general
+    assert:
+      that:
+        config_contents.stdout.find('postgresql_general') == -1
+    when: ansible_distribution_release == 'xenial'
+
+  - name: non-xenial does have postgresql_general
+    assert:
+      that:
+        config_contents.stdout.find('postgresql_general') != -1
+    when: ansible_distribution_release != 'xenial'
+
+  - name: xenial doesn't have elasticsearch_json
+    assert:
+      that:
+        config_contents.stdout.find('elasticsearch_json') == -1
+    when: ansible_distribution_release == 'xenial'
+
+  - name: non-xenial does have elasticsearch_json
+    assert:
+      that:
+        config_contents.stdout.find('elasticsearch_json') != -1
+    when: ansible_distribution_release != 'xenial'
