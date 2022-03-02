@@ -2,4 +2,4 @@
 
 - name: restart ops agent
   service: name=google-cloud-ops-agent state=restarted
-  ignore_errors: yes
+  failed_when: false

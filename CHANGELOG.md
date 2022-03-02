@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Removed
 
+## [v1.0.2] - 2022-03-02
+### Changed
+* switch from `ignore_errors: yes` to `failed_when: false` on restart handler
+
 ## [v1.0.1] - 2022-03-01
 ### Changed
 * fixed some compatability issues with Ubuntu 16.04 (xenial). Some log
@@ -20,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - initial version.
 
-[Unreleased]: https://github.com/appsembler/appsembler_ops_agent_config_role/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/appsembler/appsembler_ops_agent_config_role/compare/v1.0.2...HEAD
+[v1.0.2]: https://github.com/appsembler/appsembler_ops_agent_config_role/compare/v1.0.1...v1.0.2
 [v1.0.1]: https://github.com/appsembler/appsembler_ops_agent_config_role/compare/v1.0.0...v1.0.1
 [v1.0.0]: https://github.com/appsembler/appsembler_ops_agent_config_role/releases/tag/v1.0.0
